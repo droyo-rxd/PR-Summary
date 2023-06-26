@@ -3,6 +3,7 @@ import * as github from '@actions/github'
 import {Octokit} from '@octokit/core'
 import {OpenAIApi, Configuration} from 'openai'
 import {backOff} from 'exponential-backoff'
+import {pythonPrompt} from './prompts'
 
 async function run(): Promise<void> {
   try {
@@ -43,20 +44,31 @@ async function run(): Promise<void> {
         }
       )
 
-      const {title, body, patch_url} = response.data
+      const {title, patch_url} = response.data
 
-      const summaryResponse = await backOff(async () =>
-        openai.createCompletion({
-          model: 'text-davinci-003',
-          prompt: `Pull Request Summary: Title: ${title} Description: ${
-            body || ''
-          } Diff: ${patch_url}`,
-          temperature: 0.7,
-          max_tokens: 100,
-          top_p: 1,
-          frequency_penalty: 0,
-          presence_penalty: 0
-        })
+      // const treeResponse = await octokit.request(
+      //   'GET /repos/{owner}/{repo}/git/trees/{branch}?recursive="true"',
+      //   {
+      //     owner,
+      //     repo,
+      //     branch: base.sha,
+      //     headers: {
+      //       'X-GitHub-Api-Version': '2022-11-28'
+      //     }
+      //   }
+      // )
+
+      const summaryResponse = await backOff(
+        async () =>
+          await openai.createCompletion({
+            model: 'text-davinci-003',
+            prompt: pythonPrompt({title, patch_url}),
+            temperature: 0.7,
+            max_tokens: 100,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0
+          })
       )
 
       await octokit.request(

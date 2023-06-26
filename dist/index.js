@@ -102,7 +102,7 @@ function run() {
                     owner,
                     repo,
                     issue_number: number,
-                    body: `Version 0.0.5: ${summaryResponse.data.choices[0].text || ''}`,
+                    body: `Version 0.0.7: ${summaryResponse.data.choices[0].text || ''}`,
                     headers: {
                         'X-GitHub-Api-Version': '2022-11-28'
                     }
@@ -134,6 +134,7 @@ exports.pythonPrompt = exports.initialPrompt = void 0;
 const initialPrompt = (props) => `Pull Request Summary: Title: ${props.title} Description: ${props.body || ''} Diff: ${props.patch_url}`;
 exports.initialPrompt = initialPrompt;
 const pythonPrompt = (props) => `Write a pull request description focusing on the motivation behind the change and why it improves the project.
+    Make it straight to the point.
     Add a joke.
     Add some tips for the QAs who are going to test this.
     The title of the pull request is "${props.title}" and the following changes took place: \n ${props.patch_url}`;

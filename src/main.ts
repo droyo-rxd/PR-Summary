@@ -77,7 +77,7 @@ async function run(): Promise<void> {
           owner,
           repo,
           issue_number: number,
-          body: `Version 0.0.5: ${summaryResponse.data.choices[0].text || ''}`,
+          body: `Version 0.0.7: ${summaryResponse.data.choices[0].text || ''}`,
           headers: {
             'X-GitHub-Api-Version': '2022-11-28'
           }

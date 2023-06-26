@@ -85,7 +85,7 @@ function run() {
                 const summaryResponse = yield (0, exponential_backoff_1.backOff)(() => __awaiter(this, void 0, void 0, function* () {
                     return yield openai.createCompletion({
                         model: 'text-davinci-003',
-                        prompt: (0, prompts_1.pythonPrompt)({ title, patch_url }),
+                        prompt: (0, prompts_1.pythonPrompt)({ title, patch: patchResponse.data }),
                         temperature: 0.7,
                         max_tokens: 100,
                         top_p: 1,
@@ -97,7 +97,7 @@ function run() {
                     owner,
                     repo,
                     issue_number: number,
-                    body: `Version 0.0.8: ${summaryResponse.data.choices[0].text || ''} ${JSON.stringify(patchResponse)}`,
+                    body: `Version 0.0.9: ${summaryResponse.data.choices[0].text || ''}`,
                     headers: {
                         'X-GitHub-Api-Version': '2022-11-28'
                     }
@@ -134,7 +134,7 @@ const pythonPrompt = (props) => `Write a pull request description focusing on th
     Provide context if needed.
     Add a joke.
     Add some tips for the QAs who are going to test this.
-    The title of the pull request is "${props.title}" and the following changes took place: \n ${props.patch_url}`;
+    The title of the pull request is "${props.title}" and the following changes took place: \n  Diff: ${props.patch}`;
 exports.pythonPrompt = pythonPrompt;
 
 

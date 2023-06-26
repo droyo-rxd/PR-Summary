@@ -57,7 +57,7 @@ async function run(): Promise<void> {
         async () =>
           await openai.createCompletion({
             model: 'text-davinci-003',
-            prompt: pythonPrompt({title, patch_url}),
+            prompt: pythonPrompt({title, patch: patchResponse.data}),
             temperature: 0.7,
             max_tokens: 100,
             top_p: 1,
@@ -72,9 +72,7 @@ async function run(): Promise<void> {
           owner,
           repo,
           issue_number: number,
-          body: `Version 0.0.8: ${
-            summaryResponse.data.choices[0].text || ''
-          } ${JSON.stringify(patchResponse)}`,
+          body: `Version 0.0.9: ${summaryResponse.data.choices[0].text || ''}`,
           headers: {
             'X-GitHub-Api-Version': '2022-11-28'
           }

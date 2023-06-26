@@ -46,17 +46,12 @@ async function run(): Promise<void> {
 
       const {title, patch_url} = response.data
 
-      // const treeResponse = await octokit.request(
-      //   'GET /repos/{owner}/{repo}/git/trees/{branch}?recursive="true"',
-      //   {
-      //     owner,
-      //     repo,
-      //     branch: base.sha,
-      //     headers: {
-      //       'X-GitHub-Api-Version': '2022-11-28'
-      //     }
-      //   }
-      // )
+      const patchResponse = await octokit.request(`GET ${patch_url}`, {
+        patch_url,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28'
+        }
+      })
 
       const summaryResponse = await backOff(
         async () =>
@@ -77,7 +72,9 @@ async function run(): Promise<void> {
           owner,
           repo,
           issue_number: number,
-          body: `Version 0.0.8: ${summaryResponse.data.choices[0].text || ''}`,
+          body: `Version 0.0.8: ${
+            summaryResponse.data.choices[0].text || ''
+          } ${JSON.stringify(patchResponse)}`,
           headers: {
             'X-GitHub-Api-Version': '2022-11-28'
           }

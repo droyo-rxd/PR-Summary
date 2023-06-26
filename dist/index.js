@@ -76,17 +76,12 @@ function run() {
                     }
                 });
                 const { title, patch_url } = response.data;
-                // const treeResponse = await octokit.request(
-                //   'GET /repos/{owner}/{repo}/git/trees/{branch}?recursive="true"',
-                //   {
-                //     owner,
-                //     repo,
-                //     branch: base.sha,
-                //     headers: {
-                //       'X-GitHub-Api-Version': '2022-11-28'
-                //     }
-                //   }
-                // )
+                const patchResponse = yield octokit.request(`GET ${patch_url}`, {
+                    patch_url,
+                    headers: {
+                        'X-GitHub-Api-Version': '2022-11-28'
+                    }
+                });
                 const summaryResponse = yield (0, exponential_backoff_1.backOff)(() => __awaiter(this, void 0, void 0, function* () {
                     return yield openai.createCompletion({
                         model: 'text-davinci-003',
@@ -102,7 +97,7 @@ function run() {
                     owner,
                     repo,
                     issue_number: number,
-                    body: `Version 0.0.8: ${summaryResponse.data.choices[0].text || ''}`,
+                    body: `Version 0.0.8: ${summaryResponse.data.choices[0].text || ''} ${JSON.stringify(patchResponse)}`,
                     headers: {
                         'X-GitHub-Api-Version': '2022-11-28'
                     }

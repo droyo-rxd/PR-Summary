@@ -13,5 +13,6 @@ export const pythonPrompt = (props: {
 }): string =>
   `Write a pull request description focusing on the motivation behind the change and why it improves the project.
     Go straight to the point.
-    
+    Add a joke.
+    Add some tips for the QAs who are going to test this.
     The title of the pull request is "${props.title}" and the following changes took place: \n ${props.patch_url}`

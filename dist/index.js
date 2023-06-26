@@ -102,7 +102,7 @@ function run() {
                     owner,
                     repo,
                     issue_number: number,
-                    body: `Version 0.0.7: ${summaryResponse.data.choices[0].text || ''}`,
+                    body: `Version 0.0.8: ${summaryResponse.data.choices[0].text || ''}`,
                     headers: {
                         'X-GitHub-Api-Version': '2022-11-28'
                     }
